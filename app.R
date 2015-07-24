@@ -1,3 +1,5 @@
+if (!require(FNN)) install.packages("FNN")
+if (!require(DT)) install.packages("DT")
 library(shiny)
 library(DT)
 library(FNN)
