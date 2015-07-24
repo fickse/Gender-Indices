@@ -1,3 +1,12 @@
+######################################################
+# Shiny App for exploring gender inequality indices
+# Steve Fick 
+# sfick@ucdavis.edu
+# 7/24/2015
+#
+# Data source (2013): http://hdr.undp.org/en/data
+######################################################
+
 if (!require(FNN)) install.packages("FNN")
 if (!require(DT)) install.packages("DT")
 library(shiny)
