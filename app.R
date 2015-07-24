@@ -14,6 +14,7 @@ library(DT)
 library(FNN)
 	
 GIIcalc <- function(MMR, ABR, PRf, SEf, SEm, LFPRf, LFPRm){
+	# see: http://hdr.undp.org/sites/default/files/hdr14_technical_notes.pdf
 	PRm <- 1-PRf
 	Gf <- (sqrt(10/MMR * 1/ABR) * sqrt(PRf*SEf)*LFPRf)^(1/3)
 	Gm <- ( 1 * sqrt(PRm*SEm)*LFPRm )^(1/3)
@@ -42,7 +43,7 @@ server <- function(input, output) {
 	GIIcalc(input$MMR, input$ABR, input$PRf, input$SEf, input$SEm, input$LFPRf, input$LFPRm)
   })
   
-  k <- reactiveValues( x = NULL, y = NULL, country = NULL, i = NULL)
+  k <- reactiveValues( i = NULL)
   
   observeEvent(input$GIItable_row_last_clicked ,{
 	 e <- input$GIItable_row_last_clicked
