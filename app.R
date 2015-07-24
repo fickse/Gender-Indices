@@ -16,16 +16,18 @@ GIIcalc <- function(MMR, ABR, PRf, SEf, SEm, LFPRf, LFPRm){
 	return( 1 - H/ Gfm )
 }
 
- matchGII <- function(e){
+
+
+server <- function(input, output) {
+ 
+  d <- read.csv('gii2013.csv', stringsAsFactors=FALSE)
+  d <- na.omit(d)
+  
+   matchGII <- function(e){
 	if(!is.null(e) ){
 		knnx.index(d[, c('HDI', 'GII')], cbind(e$x,e$y), k = 1)
 	}
   }
-
-server <- function(input, output) {
- 
- d <- read.csv('gii2013.csv', stringsAsFactors=FALSE)
-  d <- na.omit(d)
   
   GII <- reactive({ 
 	GIIcalc(input$MMR, input$ABR, input$PRf, input$SEf, input$SEm, input$LFPRf, input$LFPRm)
