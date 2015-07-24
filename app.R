@@ -16,55 +16,44 @@ GIIcalc <- function(MMR, ABR, PRf, SEf, SEm, LFPRf, LFPRm){
 	return( 1 - H/ Gfm )
 }
 
+ matchGII <- function(e){
+	if(!is.null(e) ){
+		knnx.index(d[, c('HDI', 'GII')], cbind(e$x,e$y), k = 1)
+	}
+  }
+
 server <- function(input, output) {
-  d <- read.csv('gii2013.csv', stringsAsFactors=FALSE)
+ 
+ d <- read.csv('gii2013.csv', stringsAsFactors=FALSE)
   d <- na.omit(d)
   
   GII <- reactive({ 
 	GIIcalc(input$MMR, input$ABR, input$PRf, input$SEf, input$SEm, input$LFPRf, input$LFPRm)
   })
   
-  matchGII <- function(e){
-	if(!is.null(e) ){
-		knnx.index(d[, c('HDI', 'GII')], cbind(e$x,e$y), k = 1)
-	}
-  }
-  
-  
-   output$GII <- renderText({
-	 #paste0('x: ', k$x)
-	 paste0( "CURRENT GII: ", GII())
-	 
-   })
-  
   k <- reactiveValues( x = NULL, y = NULL, country = NULL, i = NULL)
   
   observeEvent(input$GIItable_row_last_clicked ,{
 	 e <- input$GIItable_row_last_clicked
-	 # k$x <- d[e,'HDI']
-	 # k$y <- d[e, 'GII']
-	 # k$country <- d[e, 'country']
 	 k$i <- e
   })
   
   observeEvent( input$plot_click, {
 	e <- input$plot_click
 	k$i <-  matchGII(e)
-	# k$x <- g[,2]
-	# k$y <- g[,3]
-	# k$country <- g[,1]
   })
   
 
-  
+  output$GII <- renderText({
+	 paste0( "CURRENT GII: ", GII())
+   })
+   
   output$plot <- renderPlot({
 	if(  ! is.null(input$plot_click) |  !is.null(input$GIItable_row_last_clicked)){}
 	gii <- GII()
 	plot(d$HDI , d$GII, xlim = c(0,1), ylim= c(0,1), xlab = 'HDI', ylab = 'GII')
 	abline( h = gii , col = 'red')
-	
-		try( points(d[k$i,c('HDI','GII')], cex = 2, col = 'blue', lwd =2) )
-	
+	try( points(d[k$i,c('HDI','GII')], cex = 2, col = 'blue', lwd =2) )
   })
   
   output$country <- DT::renderDataTable(d[k$i,])
